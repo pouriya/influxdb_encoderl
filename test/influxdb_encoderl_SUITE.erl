@@ -102,4 +102,5 @@ end_per_testcase(_TestCase, _Cfg) ->
         "x value=y 1000001000001000\n",
         influxdb_encoderl:encode(Data, #{return_type => string, encode_integer => true})
     ),
+    ?assertMatch("key value=10 " ++ _, influxdb_encoderl:encode({key, 10}, #{return_type => unsafe_string, set_timestamp => true})),
     ok.
