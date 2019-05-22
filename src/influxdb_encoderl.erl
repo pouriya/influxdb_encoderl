@@ -2,7 +2,7 @@
 %%% @author   <pouriya.jahanbakhsh@gmail.com>
 %%% @version
 %%% @doc
-%%%           Erlang VM monitoring tool.
+%%%           InfluxDB line encoder.
 %%% @end
 
 %% -----------------------------------------------------------------------------
