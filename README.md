@@ -1,5 +1,5 @@
 # `influxdb_encoderl`
-InfluxDB line encoder in Erlang.  
+[InfluxDB line](https://docs.influxdata.com/influxdb/v1.7/write_protocols/line_protocol_reference/#line-protocol) encoder in Erlang.  
 
 
 ## Build
@@ -59,6 +59,9 @@ measurement,node=influxdb_encoderl@localhost value=81 1558541268990417000
 measurement,node=influxdb_encoderl@localhost value=91 1558541268990422000
 ok
 ```
+
+### Todo
+*. escaping.
 
 
 #### Author
