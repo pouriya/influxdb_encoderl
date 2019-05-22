@@ -165,7 +165,7 @@ encode_fields([{_, _}=Item|Rest], EncodeIntegers) ->
 encode_fields(Tags, EncodeIntegers) when erlang:map_size(Tags) > 0 ->
     encode_fields(maps:to_list(Tags), EncodeIntegers);
 
-encode_fields(Value, EncodeIntegers) when erlang:is_number(Value) orelse erlang:is_binary(Value) orelse erlang:is_list(Value) ->
+encode_fields(Value, EncodeIntegers) ->
     ["value=", encode_value(Value, EncodeIntegers)].
 
 
@@ -202,7 +202,7 @@ encode_value(Value, _) when erlang:is_binary(Value) ->
 encode_value([Char|_]=Value, _) when erlang:is_integer(Char) -> % assume string
     Value;
 
-encode_value(Atom, _) ->
+encode_value(Atom, _) when erlang:is_atom(Atom) ->
     if
         Atom == true ->
             "t";
