@@ -1,0 +1,8 @@
+{application
+,influxdb_encoderl
+,[{description, "InfluxDB line encoder"}
+ ,{vsn, "0.0.0"}
+ ,{applications, [kernel, stdlib]}
+ ,{maintainers, ["pouriya.jahanbakhsh@gmail.com"]}
+ ,{licenses, ["UNLICENSED"]}
+ ,{links, [{"", ""}]}]}.
