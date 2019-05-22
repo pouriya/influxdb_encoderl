@@ -41,6 +41,8 @@ encode(Data, Opts) when erlang:is_map(Opts) ->
     case maps:get(return_type, Opts, iolist) of
         iolist ->
             Result;
+        unsafe_string ->
+            lists:flatten(Result);
         string ->
             erlang:binary_to_list(erlang:iolist_to_binary(Result));
         _ -> % binary
