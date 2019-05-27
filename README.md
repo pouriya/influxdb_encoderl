@@ -58,6 +58,16 @@ measurement,node=influxdb_encoderl@localhost value=71 1558541268990411000
 measurement,node=influxdb_encoderl@localhost value=81 1558541268990417000
 measurement,node=influxdb_encoderl@localhost value=91 1558541268990422000
 ok
+
+%   Also you can use maps for measurement (but line oreder depends to maps:from_list/1):
+10> influxdb_encoderl:encode(#{measurement => 100}, #{return_type => string}).
+"measurement value=100\n"
+
+11> influxdb_encoderl:encode(#{measurement => {100, #{tag => tag_value}}}, #{return_type => string}).
+"measurement,tag=tag_value value=100\n"
+
+12> influxdb_encoderl:encode(#{measurement => {100, #{tag => tag_value}}, m => #{k => v, k2 => v2}}, #{return_type => string}).
+"m k=v,k2=v2\nmeasurement,tag=tag_value value=100\n"
 ```
 
 ### Todo
