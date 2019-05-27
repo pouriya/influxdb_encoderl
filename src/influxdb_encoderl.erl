@@ -52,24 +52,10 @@ encode(Data, Opts) when erlang:is_map(Opts) ->
 %% -----------------------------------------------------------------------------
 %% Internals:
 
-encode({Key, Fields}, EncodeIntegers, SetTimestamp) ->
-    [
-        encode_key(Key),
-        " ",
-        encode_fields(Fields, EncodeIntegers),
-        if
-            SetTimestamp ->
-                [" ", erlang:integer_to_list(erlang:system_time(nanosecond))];
-            true ->
-                ""
-        end,
-        "\n"
-    ];
-
 encode(
- {Key, Fields, Timestamp},
- EncodeIntegers,
- _
+    {Key, Fields, Timestamp},
+    EncodeIntegers,
+    _
 ) when erlang:is_integer(Timestamp) ->
     [
         encode_key(Key),
@@ -119,8 +105,76 @@ encode({Key, Fields, Tags, Timestamp}, EncodeIntegers, _) ->
     ];
 
 encode([_|_]=L, EncodeIntegers, SetTimestamp) ->
-    encode_list(L, EncodeIntegers, SetTimestamp).
+    encode_list(L, EncodeIntegers, SetTimestamp);
 
+encode(Map, EncodeIntegers, SetTimestamp) when erlang:map_size(Map) > 0 ->
+    encode_list(maps:to_list(Map), EncodeIntegers, SetTimestamp);
+
+encode(
+    {Key, {Fields, Timestamp}},
+    EncodeIntegers,
+    _
+) when erlang:is_integer(Timestamp) ->
+    [
+        encode_key(Key),
+        " ",
+        encode_fields(Fields, EncodeIntegers),
+        " ",
+        erlang:integer_to_list(Timestamp),
+        "\n"
+    ];
+
+encode({Key, {Fields, {Mega, Sec, Micro}}}, EncodeIntegers, _) ->
+    [
+        encode_key(Key),
+        " ",
+        encode_fields(Fields, EncodeIntegers),
+        " ",
+        erlang:integer_to_list(
+            ?encode_timestamp(Mega, Sec, Micro)
+        ),
+        "\n"
+    ];
+
+encode({Key, {Fields, Tags}}, EncodeIntegers, SetTimestamp) ->
+    [
+        encode_key(Key),
+        encode_tags(Tags),
+        " ",
+        encode_fields(Fields, EncodeIntegers),
+        if
+            SetTimestamp ->
+                [" ", erlang:integer_to_list(erlang:system_time(nanosecond))];
+            true ->
+                ""
+        end,
+        "\n"
+    ];
+
+encode({Key, {Fields, Tags, Timestamp}}, EncodeIntegers, _) ->
+    [
+        encode_key(Key),
+        encode_tags(Tags),
+        " ",
+        encode_fields(Fields, EncodeIntegers),
+        " ",
+        erlang:integer_to_list(Timestamp),
+        "\n"
+    ];
+
+encode({Key, Fields}, EncodeIntegers, SetTimestamp) ->
+    [
+        encode_key(Key),
+        " ",
+        encode_fields(Fields, EncodeIntegers),
+        if
+            SetTimestamp ->
+                [" ", erlang:integer_to_list(erlang:system_time(nanosecond))];
+            true ->
+                ""
+        end,
+        "\n"
+    ].
 
 
 encode_list([Item | Rest], EncodeIntegers, SetTimestamp) ->
