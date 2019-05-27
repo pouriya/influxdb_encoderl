@@ -59,13 +59,7 @@ encode({Key, Fields}, EncodeIntegers, SetTimestamp) ->
         encode_fields(Fields, EncodeIntegers),
         if
             SetTimestamp ->
-                {Mega, Sec, Micro} = os:timestamp(),
-                [
-                    " ",
-                    erlang:integer_to_list(
-                        ?encode_timestamp(Mega, Sec, Micro)
-                    )
-                ];
+                [" ", erlang:integer_to_list(erlang:system_time(nanosecond))];
             true ->
                 ""
         end,
@@ -106,13 +100,7 @@ encode({Key, Fields, Tags}, EncodeIntegers, SetTimestamp) ->
         encode_fields(Fields, EncodeIntegers),
         if
             SetTimestamp ->
-                {Mega, Sec, Micro} = os:timestamp(),
-                [
-                    " ",
-                    erlang:integer_to_list(
-                        ?encode_timestamp(Mega, Sec, Micro)
-                    )
-                ];
+                [" ", erlang:integer_to_list(erlang:system_time(nanosecond))];
             true ->
                 ""
         end,
