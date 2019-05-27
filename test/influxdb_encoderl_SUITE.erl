@@ -103,4 +103,36 @@ end_per_testcase(_TestCase, _Cfg) ->
         influxdb_encoderl:encode(Data, #{return_type => string, encode_integer => true})
     ),
     ?assertMatch("key value=10 " ++ _, influxdb_encoderl:encode({key, 10}, #{return_type => unsafe_string, set_timestamp => true})),
+    Data2 = #{
+        <<"foo">> => 10,
+        "bar" => {1.0, TS},
+        baz => {3.14, #{tag => tag_value}, 1000001000001000},
+        qux => {<<"oops">>, [{tag, tag_value}, {tag2, tag2_value}]},
+        "p" => #{k => v, <<"k2">> => true, "k3" => 100, <<"k4">> => false, "hello" => "world"},
+        "A" => #{k => v, <<"k2">> => true, "k3" => 100},
+        "x" => {"y", 1000001000001000}
+    },
+    ?assertEqual(<<
+        "baz,tag=tag_value value=3.14 1000001000001000\n"
+        "qux,tag=tag_value,tag2=tag2_value value=oops\n"
+        "A k=v,k3=100,k2=t\n"
+        "bar value=1.0 1000001000001000\n"
+        "p k=v,hello=world,k3=100,k2=t,k4=f\n"
+        "x value=y 1000001000001000\n"
+        "foo value=10\n">>,
+        influxdb_encoderl:encode(Data2, #{return_type => binary})
+    ),
+    ?assertMatch(
+        [
+            [
+                "key",
+                [",","a","=","b"],
+                " ",
+                ["value=", ["10", []]],
+                [" ", _],
+                "\n"
+            ]
+        ],
+        influxdb_encoderl:encode(#{key => {10, [{a, b}]}}, #{return_type => iolist, set_timestamp => true})
+    ),
     ok.
